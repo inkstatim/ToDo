@@ -1,0 +1,18 @@
+{% extends 'todo/base.html' %}
+
+{% block content %}
+  <h1> {{ task.title }}</h1>
+  <p>Описание: {{ task.description }}</p>
+  <p>Дата создания: {{ task.created_at }}</p>
+    {% if task.is_completed %}
+                <p>Статус: Решено</p>
+            {% else %}
+                <p>Статус: Не решено</p>
+            {% endif %}
+  <a href="{% url 'todo:task_update' task.pk %}" class="btn btn-primary">Edit</a>
+  <form action="{% url 'todo:task_delete' task.pk %}" method="post" class="d-inline">
+    {% csrf_token %}
+    <input type="submit" value="Delete" class="btn btn-danger">
+  </form>
+  <a href="{% url 'todo:task_list' %}" class="btn btn-secondary">Back to List</a>
+{% endblock %}
