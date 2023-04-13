@@ -1,0 +1,35 @@
+{% extends 'todo/base.html' %}
+
+
+{% block content %}
+  <h1>Список задач</h1>
+
+  <a href="{% url 'todo:task_create' %}" class="btn btn-primary">Добавить задачу</a><br>
+
+  <ul>
+      <br>
+    {% for task in task_list %}
+    <tr>
+        <td>{{ task.title }}</td>
+        <td>{{ task.description }}</td>
+        <td>{{ task.priority }}</td>
+        <td>
+            {% if task.is_completed %}
+                <span class="badge badge-success">Решено</span>
+            {% else %}
+                <span class="badge badge-danger">Не решено</span>
+            {% endif %}
+        </td>
+        <td>
+            <a href="{% url 'todo:task_detail' task.pk %}" class="btn btn-info">Посмотреть</a>
+            <a href="{% url 'todo:task_update' task.pk %}" class="btn btn-warning">Редактировать</a>
+            <form action="{% url 'todo:task_delete' task.pk %}" method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Удалить</button>
+            </form>
+        </td>
+    </tr> <br><br>
+{% endfor %}
+
+  </ul>
+{% endblock %}
