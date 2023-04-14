@@ -4,7 +4,7 @@
   <h1> {{ task.title }}</h1>
   <p>Описание: {{ task.description }}</p>
   <p>Дата создания: {{ task.created_at }}</p>
-    {% if task.is_completed %}
+    {% if task.completed %}
                 <p>Статус: Решено</p>
             {% else %}
                 <p>Статус: Не решено</p>
