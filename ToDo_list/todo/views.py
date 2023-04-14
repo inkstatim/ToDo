@@ -3,10 +3,22 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, D
 from .models import Task
 from .forms import TaskFrom
 from django.shortcuts import redirect
+from django.db.models import Q
+
 
 class TaskListView(ListView):
     model = Task
     template_name = 'todo/task_list.html'
+    context_object_name = 'tasks'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.GET.get('search')
+        if search_query:
+            queryset = queryset.filter(
+                Q(title__icontains=search_query) | Q(description__icontains=search_query)
+            )
+        return queryset
 
 
 class TaskCreateView(CreateView):
@@ -40,6 +52,7 @@ class TaskDeleteView(DeleteView):
 class TaskDetailView(DetailView):
     model = Task
     template_name = 'todo/task_detail.html'
+
 
 class TaskToggleCompleteView(View):
     def post(self, request, *args, **kwargs):
