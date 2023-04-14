@@ -8,27 +8,29 @@
 
   <ul>
       <br>
-    {% for task in task_list %}
-    <tr>
-        <td>{{ task.title }}</td>
-        <td>{{ task.description }}</td>
-        <td>{{ task.priority }}</td>
-        <td>
-            {% if task.is_completed %}
-                <span class="badge badge-success">Решено</span>
-            {% else %}
-                <span class="badge badge-danger">Не решено</span>
-            {% endif %}
-        </td>
-        <td>
-            <a href="{% url 'todo:task_detail' task.pk %}" class="btn btn-info">Посмотреть</a>
-            <a href="{% url 'todo:task_update' task.pk %}" class="btn btn-warning">Редактировать</a>
-            <form action="{% url 'todo:task_delete' task.pk %}" method="post" class="d-inline">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Удалить</button>
-            </form>
-        </td>
-    </tr> <br><br>
+      {% for task in task_list %}
+  <div class="card mb-2">
+    <div class="card-body">
+      <h5 class="card-title">{{ task.title }}</h5>
+      <p class="card-text">{{ task.description }}</p>
+      <form action="{% url 'todo:task_delete' task.pk %}" method="post" class="d-inline">
+        {% csrf_token %}
+        <a href="{% url 'todo:task_detail' task.pk %}" class="btn btn-info">Посмотреть</a>
+        <a href="{% url 'todo:task_update' task.pk %}" class="btn btn-secondary">Редактировать</a>
+        <button type="submit" class="btn btn-danger">Удалить</button>
+      </form>
+      <form action="{% url 'todo:task_toggle_complete' task.pk %}" method="post" class="d-inline">
+        {% csrf_token %}
+        <div class="form-check form-check-inline">
+          <input type="checkbox" name="completed" class="form-check-input" {% if task.completed %}checked{% endif %}>
+          <label class="form-check-label">Выполнено</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+      </form>
+    </div>
+  </div>
+{% empty %}
+  <p>No tasks found.</p>
 {% endfor %}
 
   </ul>

@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, View
 from .models import Task
 from .forms import TaskFrom
-
+from django.shortcuts import redirect
 
 class TaskListView(ListView):
     model = Task
@@ -41,4 +41,10 @@ class TaskDetailView(DetailView):
     model = Task
     template_name = 'todo/task_detail.html'
 
+class TaskToggleCompleteView(View):
+    def post(self, request, *args, **kwargs):
+        task = Task.objects.get(pk=kwargs['pk'])
+        task.completed = not task.completed
+        task.save()
+        return redirect('todo:task_list')
 # Create your views here.
