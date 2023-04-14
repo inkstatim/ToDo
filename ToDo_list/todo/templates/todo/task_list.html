@@ -2,36 +2,46 @@
 
 
 {% block content %}
-  <h1>Список задач</h1>
+    <h1>Список задач</h1>
 
-  <a href="{% url 'todo:task_create' %}" class="btn btn-primary">Добавить задачу</a><br>
-
-  <ul>
-      <br>
-      {% for task in task_list %}
-  <div class="card mb-2">
-    <div class="card-body">
-      <h5 class="card-title">{{ task.title }}</h5>
-      <p class="card-text">{{ task.description }}</p>
-      <form action="{% url 'todo:task_delete' task.pk %}" method="post" class="d-inline">
-        {% csrf_token %}
-        <a href="{% url 'todo:task_detail' task.pk %}" class="btn btn-info">Посмотреть</a>
-        <a href="{% url 'todo:task_update' task.pk %}" class="btn btn-secondary">Редактировать</a>
-        <button type="submit" class="btn btn-danger">Удалить</button>
-      </form>
-      <form action="{% url 'todo:task_toggle_complete' task.pk %}" method="post" class="d-inline">
-        {% csrf_token %}
-        <div class="form-check form-check-inline">
-          <input type="checkbox" name="completed" class="form-check-input" {% if task.completed %}checked{% endif %}>
-          <label class="form-check-label">Выполнено</label>
-        </div>
-        <button type="submit" class="btn btn-primary">Сохранить</button>
-      </form>
+    <a href="{% url 'todo:task_create' %}" class="btn btn-primary">Добавить задачу</a><br><br>
+    <div>
+        <form method="GET">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Поиск задач" name="search">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit">Найти</button>
+                </div>
+            </div>
+        </form>
     </div>
-  </div>
-{% empty %}
-  <p>No tasks found.</p>
-{% endfor %}
+    <ul>
+        <br>
+        {% for task in tasks %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h5 class="card-title">{{ task.title }}</h5>
+                    <p class="card-text">{{ task.description }}</p>
+                    <form action="{% url 'todo:task_delete' task.pk %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <a href="{% url 'todo:task_detail' task.pk %}" class="btn btn-info">Посмотреть</a>
+                        <a href="{% url 'todo:task_update' task.pk %}" class="btn btn-secondary">Редактировать</a>
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>
+                    <form action="{% url 'todo:task_toggle_complete' task.pk %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" name="completed" class="form-check-input"
+                                   {% if task.completed %}checked{% endif %}>
+                            <label class="form-check-label">Выполнено</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </form>
+                </div>
+            </div>
+        {% empty %}
+            <p>No tasks found.</p>
+        {% endfor %}
 
-  </ul>
+    </ul>
 {% endblock %}
